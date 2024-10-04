@@ -47,21 +47,23 @@ const Home = () => {
           <table className="  ">
             <thead>
               <tr className="px-0">
-                <th className="px-1 ">ID</th>
+                <th className="px-1 ">Rollnumber</th>
                 <th className="px-1">Name</th>
-                <th className="px-1">Email</th>
-                <th className="px-1">Age</th>
+                <th className="px-1">DOB</th>
+                <th className="px-1">File</th>
                 <th className="px-1">Action</th>
               </tr>
             </thead>
             <tbody>
               {data.map((ele, ind) => (
                 <tr key={ind} className="mt-5">
-                  <td className="px-5 py-2 mt-3">{ele._id}</td>
-                  <td className="px-5 py-2 mt-3">{ele.username}</td>
-                  <td className="px-5 py-2 mt-3">{ele.email}</td>
-                  <td className="px-5 py-2 mt-3">{ele.age}</td>
+               
+                  <td className="px-5 py-2 mt-3">{ele.rollnumber}</td>
+                  <td className="px-5 py-2 mt-3">{ele.name}</td>
+                  <td className="px-5 py-2 mt-3">{ele.dob}</td>
+                  <td className="px-5 py-5 mt-3">{ele.file}</td>
                   <td className=" flex gap-x-2 mt-3 ms-9 text-white font-bold ">
+                  
                     {/* <button className="rounded py-1 px-5 bg-orange-500" >Read</button> */}
                     <Link
                       to={`/update/${ele._id}`}

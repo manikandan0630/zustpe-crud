@@ -1,102 +1,80 @@
 const CrudModel = require("../model/CRUD");
 
-//create
-
-const Create = async (req, res) => {
-  const { username, email, age } = req.body;
-
-  try {
-    const create = await CrudModel.create({ username, email, age });
-    if (create) {
-      res.json({
-        Message: "created Successfully",
-      });
+// Create a new record
+const createRecord = async (req, res) => {
+    const { rollnumber, name, dob,file } = req.body;
+  
+    try {
+        const newRecord = await CrudModel.create({ rollnumber, name, dob, file });
+        res.status(201).json({ message: 'Record created successfully', newRecord });
+    } catch (error) {
+        res.status(400).json({ message: 'Error creating record', error: error.message });
     }
-  } catch (error) {
-    res.json({
-      message: error.message,
-    });
-  }
-};
-//read
-
-const read = async (req, res) => {
-  try {
-    const data = await CrudModel.find();
-    if (data) {
-      res.json(data);
-    }
-  } catch (error) {
-    res.json({
-      message: error.message,
-    });
-  }
 };
 
-//update read
-const UpdateRead = async (req, res) => {
-  //geting id from frontEnd
-  const { id } = req.params;
-  try {
-    const findData = await CrudModel.findById(id);
-
-    if (findData) {
-      res.json({
-        findData,
-      });
+// Get all records
+const getAllRecords = async (req, res) => {
+    try {
+        const records = await CrudModel.find();
+        res.status(200).json(records);
+    } catch (error) {
+        res.status(400).json({ message: 'Error fetching records', error: error.message });
     }
-  } catch (error) {
-    res.json({
-      messgae: error.message,
-    });
-  }
-};
-//update
-
-const Update = async (req, res) => {
-  const id = req.params.id;
-
-  const { username, email, age } = req.body;
-
-  try {
-    const update = await CrudModel.updateOne(
-      { _id: id },
-      {
-        $set: { username: username, email: email, age: age },
-      }
-    );
-
-    if (update) {
-      res.json("Updates successfully");
-    }
-  } catch (error) {
-    res.json({
-      messgae: error.message,
-    });
-  }
 };
 
-//delete
-const Delete = async (req, res) => {
-  const id = req.params.id;
-
-  try {
-    const remove = await CrudModel.deleteOne({ _id: id });
-    if (remove) {
-      res.json({
-        message: "Deleted successfully",
-      });
+// Get a single record by ID
+const getRecordById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const record = await CrudModel.findById(id);
+        if (!record) {
+            return res.status(404).json({ message: 'Record not found' });
+        }
+        res.status(200).json(record);
+    } catch (error) {
+        res.status(400).json({ message: 'Error fetching record', error: error.message });
     }
-  } catch (error) {
-    res.json({
-      message: error.message,
-    });
-  }
 };
+
+// Update a record by ID
+const updateRecord = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updatedData = { ...req.body };
+
+        
+        if (req.file) {
+            updatedData.file = req.file.path; 
+        }
+
+        const updatedRecord = await CrudModel.findByIdAndUpdate(id, updatedData, { new: true, runValidators: true });
+        if (!updatedRecord) {
+            return res.status(404).json({ message: 'Record not found' });
+        }
+        res.status(200).json({ message: 'Record updated successfully', updatedRecord });
+    } catch (error) {
+        res.status(400).json({ message: 'Error updating record', error: error.message });
+    }
+};
+
+// Delete a record by ID
+const deleteRecord = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedRecord = await CrudModel.findByIdAndDelete(id);
+        if (!deletedRecord) {
+            return res.status(404).json({ message: 'Record not found' });
+        }
+        res.status(200).json({ message: 'Record deleted successfully', deletedRecord });
+    } catch (error) {
+        res.status(400).json({ message: 'Error deleting record', error: error.message });
+    }
+};
+
 module.exports = {
-  Create,
-  read,
-  Update,
-  UpdateRead,
-  Delete,
+    createRecord,
+    getAllRecords,
+    getRecordById,
+    updateRecord,
+    deleteRecord,
 };

@@ -2,14 +2,21 @@ const mongoose=require("mongoose")
 
 //schema
 const CrudSchema=new mongoose.Schema({
-    username:{
-        type:String
+    rollnumber:{
+        type:Number,
+        required:true,
     },
-    email:{
-        type:String
+    name:{
+        type:String,
+        required:true,
     },
-    age:{
-        type:String
+    dob:{
+        type:String,
+        required:true,
+    },
+    file:{
+        type:String,
+        required:true
     }
 })
 
